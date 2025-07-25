@@ -33,7 +33,7 @@ enum CardTransactionCategorization {
   Unknown
 }
 
-function CategorizeCardTransaction(transaction: CardTransaction, prevTransactionContext: CardTransaction[]) -> CardFraudDetectionResponse {
+function CategorizeCardTransaction(transaction: CardTransaction, prevTransactionContext: CardTransaction[], ruleContext: string) -> CardFraudDetectionResponse {
     client "openai/gpt-4.1"
     prompt #"
     You are a fraud detection system. Analyze the provided transaction, as well as the previous transaction context, and classify it as one of three categories:
@@ -50,6 +50,11 @@ function CategorizeCardTransaction(transaction: CardTransaction, prevTransaction
 
     Return only the category name. If multiple factors conflict or data is incomplete, choose "Unknown" rather than guessing.
     
+    Context documents - use these to help you determine the category:
+    ---
+    {{ ruleContext }}
+    ---
+
     Transaction data
     ---
     {{ transaction }}
@@ -115,6 +120,7 @@ test SampleTest {
                 status "Approved"
             }
         ]
+        ruleContext "Reject all transactions over $1500" 
     }
     @@assert({{ this.categorization == "Fraud" or this.categorization == "Normal" or this.categorization == "Unknown" }})
 }

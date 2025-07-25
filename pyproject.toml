@@ -3,9 +3,11 @@ name = "llm-card-fraud-detection"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "baml-py>=0.201.0",
+    "chromadb>=1.0.15",
     "fastapi>=0.100.0",
+    "sentence-transformers>=5.0.0",
     "uvicorn>=0.23.0",
 ]
